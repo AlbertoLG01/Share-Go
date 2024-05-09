@@ -1,4 +1,4 @@
-package com.example.sharego.ui.search
+package com.example.sharego.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

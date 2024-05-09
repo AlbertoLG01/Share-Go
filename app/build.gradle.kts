@@ -48,6 +48,8 @@ dependencies {
 
     implementation(libs.androidx.ui.android)
     implementation ("androidx.compose.material:material:1.4.3")
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.fragment.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
