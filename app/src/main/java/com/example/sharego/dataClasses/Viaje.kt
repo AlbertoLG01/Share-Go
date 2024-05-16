@@ -9,5 +9,6 @@ data class Viaje(
     val Destino: String = "",
     val Fecha: Timestamp = Timestamp.now(),
     val Plazas: Int = 0,
-    val Pasajeros: List<DocumentReference> = emptyList()
+    val Pasajeros: List<DocumentReference> = emptyList(),
+    val PrecioPlaza: Float = 0f
 )
