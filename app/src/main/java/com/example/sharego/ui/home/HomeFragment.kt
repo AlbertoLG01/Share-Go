@@ -81,9 +81,9 @@ class ViajeAdapter(private var viajes: List<Viaje>) : RecyclerView.Adapter<Viaje
         val viaje = viajes[position]
 
         // Obtener el nombre del conductor a partir de la referencia
-        viaje.Conductor?.get()
+        viaje.conductor?.get()
             ?.addOnSuccessListener { conductorDocument ->
-                val nombreConductor = conductorDocument.getString("Nombre")
+                val nombreConductor = conductorDocument.getString("nombre")
                 // Si se obtiene el nombre del conductor, actualizar el TextView correspondiente
                 nombreConductor?.let {
                     holder.nombreConductorTextView.text = "Conductor: $nombreConductor"
@@ -93,11 +93,11 @@ class ViajeAdapter(private var viajes: List<Viaje>) : RecyclerView.Adapter<Viaje
                 Log.e("ViajeAdapter", "Error al obtener el nombre del conductor: $exception")
             }
 
-        holder.origenDestinoTextView.text = "Origen: ${viaje.Origen} -> Destino: ${viaje.Destino}"
-        holder.precioTextView.text = String.format("Precio: %.2f", viaje.PrecioPlaza)
+        holder.origenDestinoTextView.text = "Viaje: ${viaje.origen} -> ${viaje.destino}"
+        holder.precioTextView.text = String.format("Precio: %.2f", viaje.precioPlaza)
 
         //Para formatear la fecha
-        val fechaTimestamp = viaje.Fecha.toDate() // Convertir el Timestamp a Date
+        val fechaTimestamp = viaje.fecha.toDate() // Convertir el Timestamp a Date
         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()) // Formato de fecha deseado
         val fechaFormateada = dateFormat.format(fechaTimestamp) // Convertir la fecha a String con el formato deseado
         holder.fechaTextView.text = "Fecha: $fechaFormateada" // Mostrar la fecha formateada en el TextView

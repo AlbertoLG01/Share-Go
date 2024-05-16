@@ -31,7 +31,7 @@ class HomeViewModel : ViewModel() {
     private fun getViajes() {
 
         db.collection("Viajes")
-            .whereArrayContains("Pasajeros", db.document("Usuarios/$userID"))
+            .whereArrayContains("pasajeros", db.document("Usuarios/$userID"))
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val viajeList = querySnapshot.toObjects<Viaje>()

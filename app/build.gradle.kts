@@ -56,6 +56,7 @@ dependencies {
     implementation (libs.firebase.analytics.ktx)
     implementation (libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore)
+    implementation(libs.androidx.animation.graphics.android)
 
 
     testImplementation(libs.junit)
