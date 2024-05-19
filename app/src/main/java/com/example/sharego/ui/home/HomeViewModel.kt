@@ -15,7 +15,7 @@ class HomeViewModel : ViewModel() {
     val viajes: LiveData<List<Viaje>> = _viajes
 
     private val _text = MutableLiveData<String>().apply {
-        value = "Tus Viajes"
+        value = "Estos son tus viajes:"
     }
     val text: LiveData<String> = _text
 
@@ -24,7 +24,8 @@ class HomeViewModel : ViewModel() {
     val userID = "pUvzJWWI7DfpvDO0TgqP"  //ANA.... CAMBIAR POR USER ID CUANDO SE INICIE SESION
 
     init {
-        // Get the viajes from the database
+        //Obtener el nombre del usuario y sus viajes de la base de datos
+        getNombreUsuario()
         getViajes()
     }
 
@@ -39,5 +40,18 @@ class HomeViewModel : ViewModel() {
                 _viajes.value = viajeList
             }
 
+    }
+
+    private fun getNombreUsuario(){
+        db.collection("Usuarios").document(userID).get().addOnSuccessListener {
+            val nombre = it.get("nombre")
+            val sexo = it.get("sexo")
+            if(sexo == "Hombre")
+                _text.value = "Bienvenido $nombre ! \n" + _text.value
+            else if (sexo == "Mujer")
+                _text.value = "Bienvenida $nombre ! \n" + _text.value
+            else
+                _text.value = "Bienvenid@ $nombre ! \n" + _text.value
+        }
     }
 }

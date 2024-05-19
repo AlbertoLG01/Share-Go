@@ -6,19 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment">
 
+    <TextView
+        android:id="@+id/tituloTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tus Datos"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/nombreEditText"/>
+
     <EditText
         android:id="@+id/nombreEditText"
         android:layout_width="0dp"
+        android:maxLines="1"
         android:layout_height="wrap_content"
         android:hint="Nombre"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tituloTextView" />
 
     <EditText
         android:id="@+id/apellido1EditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:hint="Primer Apellido"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +45,7 @@
         android:id="@+id/apellido2EditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:hint="Segundo Apellido"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +55,7 @@
         android:id="@+id/emailEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:hint="Email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,6 +66,7 @@
         android:id="@+id/telefonoEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:hint="Teléfono"
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,18 +78,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Sexo"
+        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/telefonoEditText" />
 
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/fechaNacEditText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Selecciona tu fecha de nacimiento"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sexoEditText"
-        android:visibility="gone"/>
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
     <Button
         android:id="@+id/guardarButton"
