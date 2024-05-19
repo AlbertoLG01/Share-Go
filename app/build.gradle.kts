@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -57,6 +58,8 @@ dependencies {
     implementation (libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.animation.graphics.android)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
 
 
     testImplementation(libs.junit)

@@ -16,7 +16,6 @@ import java.util.Date
 import java.util.Locale
 
 class ProfileFragment : Fragment() {
-
     companion object {
         fun newInstance() = ProfileFragment()
     }
