@@ -1,5 +1,6 @@
 package com.example.sharego.ui.publish
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.sharego.MainActivity
 import com.example.sharego.R
 import com.example.sharego.dataClasses.Viaje
@@ -26,6 +28,8 @@ class PublishFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+        val viewModel: PublishViewModel by viewModels()
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -35,10 +39,17 @@ class PublishFragment : Fragment() {
         _binding = FragmentPublishBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-//        val textView: TextView = binding.textPublish
-//        viewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
+        val textView: TextView = binding.textPublish
+
+        viewModel.text.observe(viewLifecycleOwner) {
+            textView.text = it
+        }
+
+        binding.botonPublish.setOnClickListener{
+            val intent = Intent(requireContext(), MapsActivity::class.java)
+            startActivity(intent)
+        }
+
 
 
         return root
