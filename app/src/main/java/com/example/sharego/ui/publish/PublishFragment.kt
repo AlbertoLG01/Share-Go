@@ -18,12 +18,9 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.model.Document
 import com.google.type.LatLng
 
-class PublishFragment : Fragment(), OnLocationSelectedListener {
+class PublishFragment : Fragment() {
 
     private var _binding: FragmentPublishBinding? = null
-    private val viewModel: PublishViewModel by viewModels()
-
-    private var viaje = Viaje()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -38,53 +35,50 @@ class PublishFragment : Fragment(), OnLocationSelectedListener {
         _binding = FragmentPublishBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textPublish
-        viewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+//        val textView: TextView = binding.textPublish
+//        viewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
+//        }
 
-        navigateToMapsFragment()
 
-        val mainActivity = requireActivity() as MainActivity
-        viaje.conductor = mainActivity.getUsuarioReference()
         return root
     }
 
-    override fun onLocationSelected(location: com.google.android.gms.maps.model.LatLng) {
-        // Aquí actualiza el objeto Viaje según corresponda
-
-        if(viaje.origenGeo == null){
-            viaje.origenGeo = GeoPoint(location.latitude, location.longitude)
-            Log.d("PublishFragment", "Añadiendo origen... ${viaje.origenGeo}")
-            viewModel.paso2()
-            navigateToMapsFragment()
-        }
-        else{
-            viaje.destinoGeo = GeoPoint(location.latitude, location.longitude)
-            Log.d("PublishFragment", "Añadiendo destino... ${viaje.destinoGeo}")
-        }
-
-    }
-
-    fun navigateToMapsFragment() {
-        // Obtén el FragmentManager
-        val fragmentManager = childFragmentManager
-
-        // Crea una instancia del fragmento del mapa
-        val mapsFragment = MapsFragment()
-
-        // Inicia una transacción de fragmentos
-        val transaction = fragmentManager.beginTransaction()
-
-        // Reemplaza el contenido actual con el fragmento del mapa
-        transaction.replace(R.id.fragment_container, mapsFragment)
-
-        // Añade la transacción al back stack para permitir la navegación hacia atrás si es necesario
-        transaction.addToBackStack(null)
-
-        // Realiza la transacción
-        transaction.commit()
-    }
+//    override fun onLocationSelected(location: com.google.android.gms.maps.model.LatLng) {
+//        // Aquí actualiza el objeto Viaje según corresponda
+//
+//        if(viaje.origenGeo == null){
+//            viaje.origenGeo = GeoPoint(location.latitude, location.longitude)
+//            Log.d("PublishFragment", "Añadiendo origen... ${viaje.origenGeo}")
+//            viewModel.paso2()
+//            navigateToMapsFragment()
+//        }
+//        else{
+//            viaje.destinoGeo = GeoPoint(location.latitude, location.longitude)
+//            Log.d("PublishFragment", "Añadiendo destino... ${viaje.destinoGeo}")
+//        }
+//
+//    }
+//
+//    fun navigateToMapsFragment() {
+//        // Obtén el FragmentManager
+//        val fragmentManager = childFragmentManager
+//
+//        // Crea una instancia del fragmento del mapa
+//        val mapsFragment = MapsFragment()
+//
+//        // Inicia una transacción de fragmentos
+//        val transaction = fragmentManager.beginTransaction()
+//
+//        // Reemplaza el contenido actual con el fragmento del mapa
+//        transaction.replace(R.id.fragment_container, mapsFragment)
+//
+//        // Añade la transacción al back stack para permitir la navegación hacia atrás si es necesario
+//        transaction.addToBackStack(null)
+//
+//        // Realiza la transacción
+//        transaction.commit()
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
