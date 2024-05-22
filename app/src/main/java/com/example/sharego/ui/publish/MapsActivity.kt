@@ -22,11 +22,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(){
 
-    private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,13 +34,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         hideSystemUI()
         supportActionBar?.title = "¿Desde dónde sales?"
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        // Configurar el SupportMapFragment dinámicamente
+        val mapFragment = MapsFragment()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.contenedor_fragments, mapFragment)
+            .commit()
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        requestLocationPermission()
 
         // Configurar el OnClickListener para el botón de volver atrás
         binding.fabBack.setOnClickListener {
@@ -59,58 +56,76 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Configurar el OnClickListener para el botón de continuar
         binding.fabNext.setOnClickListener {
-            // Aquí puedes navegar al siguiente fragmento (el selector de franja horaria)
-            // Por ejemplo, navegar al fragmento TimeSelectorFragment
-//            val transaction = supportFragmentManager.beginTransaction()
-//            transaction.replace(R.id.container, TimeSelectorFragment())
-//            transaction.addToBackStack(null)
-//            transaction.commit()
-        }
-    }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.contenedor_fragments)
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            mMap.isMyLocationEnabled = true
 
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    val currentLocation = LatLng(location.latitude, location.longitude)
-                    mMap.addMarker(MarkerOptions().position(currentLocation).title("Tu Ubicación"))
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
-                }
+            //Navegar al siguiente fragmento
+            val transaction = supportFragmentManager.beginTransaction()
+
+            if (currentFragment is MapsFragment) {
+                // El fragmento actual es MapsFragment
+                transaction.replace(R.id.contenedor_fragments, TimeSelectorFragment())
+            } else if (currentFragment is TimeSelectorFragment) {
+                // El fragmento actual es TimeSelectorFragment
+                TODO()
+                //Comprobar que los minutos no distan menos de 15 (en valor abs)
+                //transaction.replace(R.id.contenedor_fragments, MapsFragment2())
+            } else {
+                // El fragmento actual es otro fragmento
+                // Realiza aquí las acciones predeterminadas o manejo de error
             }
-        }
 
-        mMap.setOnMapClickListener { latLng ->
-            mMap.clear()
-            mMap.addMarker(MarkerOptions().position(latLng).title("Ubicación seleccionada"))
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-        }
-    }
 
-    private fun requestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
+
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
     }
 
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
-    }
+//    override fun onMapReady(googleMap: GoogleMap) {
+//        mMap = googleMap
+//
+//        if (ActivityCompat.checkSelfPermission(
+//                this,
+//                android.Manifest.permission.ACCESS_FINE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED
+//        ) {
+//            mMap.isMyLocationEnabled = true
+//
+//            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+//                if (location != null) {
+//                    val currentLocation = LatLng(location.latitude, location.longitude)
+//                    mMap.addMarker(MarkerOptions().position(currentLocation).title("Tu Ubicación"))
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
+//                }
+//            }
+//        }
+//
+//        mMap.setOnMapClickListener { latLng ->
+//            mMap.clear()
+//            mMap.addMarker(MarkerOptions().position(latLng).title("Ubicación seleccionada"))
+//            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+//        }
+//    }
+//
+//    private fun requestLocationPermission() {
+//        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+//            != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            ActivityCompat.requestPermissions(
+//                this,
+//                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+//                LOCATION_PERMISSION_REQUEST_CODE
+//            )
+//        }
+//    }
+//
+//    companion object {
+//        private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
+//    }
 
-    private fun hideSystemUI() {
+    fun hideSystemUI() {
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY

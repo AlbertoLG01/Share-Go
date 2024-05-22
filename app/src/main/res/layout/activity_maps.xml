@@ -7,8 +7,8 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".ui.publish.MapsFragment">
 
-    <fragment
-        android:id="@+id/map"
+    <FrameLayout
+        android:id="@+id/contenedor_fragments"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -16,26 +16,6 @@ tools:context=".ui.publish.MapsFragment">
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Buscar lugar..."
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editText_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLines="1"
-            android:background="@drawable/rounded_edittext_background"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
 
     <LinearLayout
     android:id="@+id/buttonContainer"
@@ -72,6 +52,7 @@ tools:context=".ui.publish.MapsFragment">
             android:layout_margin="8dp"
             app:srcCompat="@drawable/baseline_arrow_circle_right_24"
             android:contentDescription="Next" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

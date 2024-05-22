@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".ui.publish.TimeSelectorFragment">
+
+
+    <TextView
+        android:id="@+id/selectedTimeRange"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Franja horaria seleccionada: "
+        android:padding="16dp"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:id="@+id/startTimeEditText"
+        android:layout_marginTop="50dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Selecciona hora inicio"
+        android:textAlignment="center"
+        android:focusable="false"
+        android:padding="16dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="none"
+        android:textColor="@color/white"
+        android:layout_gravity="center" />
+
+    <EditText
+        android:id="@+id/endTimeEditText"
+        android:layout_marginTop="50dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Selecciona hora fin"
+        android:textAlignment="center"
+        android:focusable="false"
+        android:padding="16dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="none"
+        android:textColor="@color/white"
+        android:layout_gravity="center"/>
+
+</LinearLayout>
