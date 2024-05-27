@@ -53,6 +53,11 @@ class MainActivity : AppCompatActivity() {
         //navController.navigate(R.id.navigation_home)
     }
 
+    override fun onResume() {
+        hideSystemUI()
+        super.onResume()
+    }
+
     fun getUsuario(): Usuario {
         return usuario
     }

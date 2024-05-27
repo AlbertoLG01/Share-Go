@@ -107,4 +107,8 @@ class TimeRangeSelectorFragment : Fragment() {
         else
             return true
     }
+
+    fun getRangoHoras(): Pair<Pair<Int, Int>, Pair<Int, Int>> {
+        return Pair(Pair(startHour, startMinute), Pair(endHour, endMinute))
+    }
 }

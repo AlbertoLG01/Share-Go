@@ -1,4 +1,4 @@
-package com.example.sharego.ui.publish
+package com.example.sharego.ui.search
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
