@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Introduce el precio por plaza"
                 android:inputType="numberDecimal"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textColorHint="@android:color/white"/>
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -80,8 +80,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Añade una descripción"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"/>
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/white"
+                android:maxLines="3"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

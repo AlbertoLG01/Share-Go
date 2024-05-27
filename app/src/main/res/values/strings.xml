@@ -17,4 +17,5 @@
     <string name="selecciona_tu_fecha_de_nacimiento">Selecciona tu fecha de nacimiento</string>
     <string name="guardar">Guardar</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_explore">ExploreActivity</string>
 </resources>
