@@ -18,11 +18,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsFragment : Fragment() {
 
-    private var listener: OnLocationSelectedListener? = null
+    private var marker : Marker? = null
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -38,25 +39,26 @@ class MapsFragment : Fragment() {
          * user has installed Google Play services and returned to the app.
          */
 
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                val currentLocation = LatLng(location.latitude, location.longitude)
-                googleMap.addMarker(MarkerOptions().position(currentLocation).title("Tu Ubicación"))
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
+        //Comprobación por si se vuelve atras para que no tenga dos marcadores
+        if(marker == null){
+
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    val currentLocation = LatLng(location.latitude, location.longitude)
+                    marker = googleMap.addMarker(MarkerOptions().position(currentLocation).title("Tu Ubicación"))
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
+                }
             }
-        }
 
-        googleMap.setOnMapClickListener { latLng ->
-            googleMap.clear()
-            googleMap.addMarker(MarkerOptions().position(latLng).title("Ubicacion seleccionada"))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-            listener?.onLocationSelected(latLng)
+            googleMap.setOnMapClickListener { latLng ->
+                googleMap.clear()
+                marker = googleMap.addMarker(MarkerOptions().position(latLng).title("Ubicacion seleccionada"))
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+            }
+
         }
     }
 
-    fun setOnLocationSelectedListener(listener: OnLocationSelectedListener) {
-        this.listener = listener
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

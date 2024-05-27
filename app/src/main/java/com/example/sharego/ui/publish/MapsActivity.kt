@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.graphics.toArgb
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 
 class MapsActivity : AppCompatActivity(){
 
@@ -66,20 +68,25 @@ class MapsActivity : AppCompatActivity(){
             if (currentFragment is MapsFragment) {
                 // El fragmento actual es MapsFragment
                 transaction.replace(R.id.contenedor_fragments, TimeSelectorFragment())
+                transaction.addToBackStack(null)
+                transaction.commit()
             } else if (currentFragment is TimeSelectorFragment) {
                 // El fragmento actual es TimeSelectorFragment
-                TODO()
                 //Comprobar que los minutos no distan menos de 15 (en valor abs)
-                //transaction.replace(R.id.contenedor_fragments, MapsFragment2())
+                if (currentFragment.compruebaRango()){
+                    transaction.replace(R.id.contenedor_fragments, MapsFragment2())
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                }
+                else{
+                    val snackbar = Snackbar.make(currentFragment.requireView(), "Selecciona un rango de horas como mínimo de 15 minutos", Snackbar.LENGTH_LONG)
+                    snackbar.anchorView = binding.fabNext
+                    snackbar.show()
+                }
             } else {
                 // El fragmento actual es otro fragmento
                 // Realiza aquí las acciones predeterminadas o manejo de error
             }
-
-
-
-            transaction.addToBackStack(null)
-            transaction.commit()
         }
     }
 

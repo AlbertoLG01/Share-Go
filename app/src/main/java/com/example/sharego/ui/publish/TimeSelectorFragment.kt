@@ -11,6 +11,7 @@ import com.example.sharego.R
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.util.*
+import kotlin.math.abs
 
 class TimeSelectorFragment : Fragment() {
 
@@ -94,5 +95,9 @@ class TimeSelectorFragment : Fragment() {
         val endTime = String.format(Locale.getDefault(), "%02d:%02d %s", endHour, endMinute, endPeriod)
         val timeRange = "Franja horaria seleccionada: $startTime - $endTime"
         selectedTimeRangeTextView.text = timeRange
+    }
+
+    fun compruebaRango(): Boolean {
+        return (abs(endMinute-startMinute) >= 15)
     }
 }
