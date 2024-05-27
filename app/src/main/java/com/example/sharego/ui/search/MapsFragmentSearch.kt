@@ -14,7 +14,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -24,9 +23,9 @@ import com.google.firebase.firestore.GeoPoint
 import android.location.Geocoder
 import java.util.Locale
 
-class MapsFragment : Fragment() {
+class MapsFragmentSearch : Fragment() {
 
-    private var marker : Marker? = null
+    private var marker: Marker? = null
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -42,24 +41,21 @@ class MapsFragment : Fragment() {
          * user has installed Google Play services and returned to the app.
          */
 
-        //Comprobación por si se vuelve atras para que no tenga dos marcadores
-        if(marker == null){
 
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    val currentLocation = LatLng(location.latitude, location.longitude)
-                    marker = googleMap.addMarker(MarkerOptions().position(currentLocation).title("Tu Ubicación"))!!
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
-                }
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                val currentLocation = LatLng(location.latitude, location.longitude)
+                marker = googleMap.addMarker(MarkerOptions().position(currentLocation).title("Tu Ubicación"))
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
             }
-
-            googleMap.setOnMapClickListener { latLng ->
-                googleMap.clear()
-                marker = googleMap.addMarker(MarkerOptions().position(latLng).title("Ubicacion seleccionada"))!!
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-            }
-
         }
+
+        googleMap.setOnMapClickListener { latLng ->
+            googleMap.clear()
+            marker = googleMap.addMarker(MarkerOptions().position(latLng).title("Ubicacion seleccionada"))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        }
+
     }
 
 
@@ -109,7 +105,7 @@ class MapsFragment : Fragment() {
     fun getCiudadOrigen(): String? {
         val latLng = marker?.position
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        val addresses = latLng?.let { geocoder.getFromLocation(it.latitude, latLng.longitude, 1) }
+        val addresses = latLng?.let { geocoder.getFromLocation(it.latitude, it.longitude, 1) }
 
         return if (addresses!!.isNotEmpty()) {
             addresses[0].locality // Devuelve el nombre de la ciudad
@@ -118,8 +114,8 @@ class MapsFragment : Fragment() {
         }
     }
 
-    fun getMarker(): LatLng? {
-        return marker?.position
+    fun getMarker(): LatLng {
+        return marker?.position ?: LatLng(0.0, 0.0)
     }
 }
 

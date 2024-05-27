@@ -1,6 +1,7 @@
 package com.example.sharego.ui.search
 
 import ResumenViajeFragment
+import ResumenViajeSearchFragment
 import SelectViajeFragment
 import android.content.Intent
 import android.os.Bundle
@@ -29,9 +30,9 @@ class ExploreActivity : AppCompatActivity(){
         supportActionBar?.title = "¿Desde dónde quieres salir?"
 
         // Configurar el SupportMapFragment dinámicamente
-        val mapFragment = MapsFragment()
+        val mapFragment = MapsFragmentSearch()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.contenedor_fragments, mapFragment)
+            .replace(R.id.contenedor_fragments, mapFragment, "MapsFragmentSearch")
             .commit()
 
 
@@ -63,7 +64,7 @@ class ExploreActivity : AppCompatActivity(){
             //Navegar al siguiente fragmento
             val transaction = supportFragmentManager.beginTransaction()
 
-            if (currentFragment is MapsFragment) {
+            if (currentFragment is MapsFragmentSearch) {
                 // El fragmento actual es MapsFragment
                 transaction.replace(R.id.contenedor_fragments, TimeRangeSelectorFragment())
                 transaction.addToBackStack(null)
@@ -73,11 +74,11 @@ class ExploreActivity : AppCompatActivity(){
                 //Comprobar que los minutos no distan menos de 15 (en valor abs)
                 if (currentFragment.compruebaRango()){
 
-                    val marker = (supportFragmentManager.findFragmentByTag("MapsFragment") as? MapsFragment)?.getMarker()
+                    val markerPosition = (supportFragmentManager.findFragmentByTag("MapsFragmentSearch") as MapsFragmentSearch).getMarker()
                     val rangoHoras = currentFragment.getRangoHoras()
 
                     val bundle = Bundle().apply {
-                        putParcelable("marker", marker)
+                        putParcelable("markerPosition", markerPosition)
                         putSerializable("rangoHoras", rangoHoras)
                     }
 
@@ -98,7 +99,7 @@ class ExploreActivity : AppCompatActivity(){
 
                 binding.fabNext.isEnabled = false
 
-                transaction.replace(R.id.contenedor_fragments, ResumenViajeFragment())
+                transaction.replace(R.id.contenedor_fragments, ResumenViajeSearchFragment())
                 transaction.addToBackStack(null)
                 transaction.commit()
 

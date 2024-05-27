@@ -61,7 +61,7 @@ class TimeRangeSelectorFragment : Fragment() {
         }
 
         picker.addOnDismissListener {
-            val activity = requireActivity() as MapsActivity
+            val activity = requireActivity() as ExploreActivity
             activity.hideSystemUI()
         }
 
@@ -85,7 +85,7 @@ class TimeRangeSelectorFragment : Fragment() {
         }
 
         picker.addOnDismissListener {
-            val activity = requireActivity() as MapsActivity
+            val activity = requireActivity() as ExploreActivity
             activity.hideSystemUI()
         }
 

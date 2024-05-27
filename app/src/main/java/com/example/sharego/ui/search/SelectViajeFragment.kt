@@ -14,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -48,10 +49,6 @@ class SelectViajeFragment : Fragment() {
         markerPosition = arguments?.getParcelable("markerPosition")
         rangoHoras = arguments?.getSerializable("rangoHoras") as? Pair<Pair<Int, Int>, Pair<Int, Int>>
 
-        // Utiliza los datos aquí según sea necesario
-        if (rangoHoras != null) {
-            fetchAndDisplayViajes(rangoHoras!!)
-        }
     }
 
     private val callback = OnMapReadyCallback { map ->
@@ -59,7 +56,14 @@ class SelectViajeFragment : Fragment() {
 
         // Coloca el marcador en el mapa usando markerPosition
         markerPosition?.let {
-            googleMap.addMarker(MarkerOptions().position(it).title("Ubicación seleccionada"))
+
+            val markerOptions = MarkerOptions().position(markerPosition!!).title("Ubicación seleccionada")
+
+            // Cambiar el color del marcador
+            val color = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
+            markerOptions.icon(color)
+
+            googleMap.addMarker(markerOptions)
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15f))
         }
 
@@ -73,7 +77,11 @@ class SelectViajeFragment : Fragment() {
             true
         }
 
-        // Resto del código para añadir los viajes cercanos
+        // Utiliza los datos aquí según sea necesario
+        if (rangoHoras != null) {
+            fetchAndDisplayViajes(rangoHoras!!)
+        }
+
     }
 
     private fun requestLocationPermission() {
@@ -113,12 +121,15 @@ class SelectViajeFragment : Fragment() {
                             val geoPoint = document.getGeoPoint("origenGeo")
                             if (geoPoint != null) {
                                 val viajePosition = LatLng(geoPoint.latitude, geoPoint.longitude)
-                                if (isWithinRadius(markerPosition!!, viajePosition, 4000.0)) {
+                                if (isWithinRadius(markerPosition!!, viajePosition, 3000.0)) {
                                     val marker = googleMap.addMarker(
                                         MarkerOptions()
                                             .position(viajePosition)
                                             .title("Viaje encontrado")
                                     )
+
+                                    marker?.tag = document.id
+
                                     if (!firstMarkerAdded) {
                                         markerSeleccionado = marker
                                         marker?.showInfoWindow()
