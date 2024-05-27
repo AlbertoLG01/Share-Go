@@ -6,22 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.sharego.R
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.abs
 
 class TimeSelectorFragment : Fragment() {
 
-    private lateinit var selectedTimeRangeTextView: TextView
+    private lateinit var selectedDateTimeTextView: TextView
+    private lateinit var startDateEditText: EditText
     private lateinit var startTimeEditText: EditText
-    private lateinit var endTimeEditText: EditText
-    private var startHour: Int = 0
-    private var startMinute: Int = 0
-    private var endHour: Int = 0
-    private var endMinute: Int = 0
+
+    private var selectedDate: Long? = null
+    private var selectedTime: Pair<Int, Int>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,75 +31,80 @@ class TimeSelectorFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_time_selector, container, false)
-        selectedTimeRangeTextView = view.findViewById(R.id.selectedTimeRange)
-        startTimeEditText = view.findViewById(R.id.startTimeEditText)
-        endTimeEditText = view.findViewById(R.id.endTimeEditText)
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "¿Cuando sales?"
 
-        startTimeEditText.setOnClickListener { showStartTimePicker() }
-        endTimeEditText.setOnClickListener { showEndTimePicker() }
+        selectedDateTimeTextView = view.findViewById(R.id.selectedDateTime)
+        startDateEditText = view.findViewById(R.id.startDateEditText)
+        startTimeEditText = view.findViewById(R.id.startTimeEditText)
+
+        startDateEditText.setOnClickListener { showDatePicker() }
+        startTimeEditText.setOnClickListener { showTimePicker() }
 
         return view
     }
 
-    private fun showStartTimePicker() {
+    private fun showDatePicker() {
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Selecciona la fecha del viaje")
+            .build()
+
+        datePicker.addOnPositiveButtonClickListener { epochMillis ->
+            selectedDate = epochMillis
+            val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(epochMillis))
+            startDateEditText.setText(formattedDate)
+            updateSelectedDateTime()
+        }
+
+        datePicker.show(childFragmentManager, "DATE_PICKER")
+    }
+
+    private fun showTimePicker() {
         val calendar = Calendar.getInstance()
         val picker = MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_12H)
             .setHour(calendar.get(Calendar.HOUR_OF_DAY) % 12)
             .setMinute(calendar.get(Calendar.MINUTE))
-            .setTitleText("Selecciona la hora de inicio")
+            .setTitleText("Selecciona la hora del viaje")
             .build()
 
         picker.addOnPositiveButtonClickListener {
-            startHour = picker.hour
-            startMinute = picker.minute
-            val startPeriod = if (picker.hour < 12) "AM" else "PM"
-            startTimeEditText.setText(String.format(Locale.getDefault(), "%02d:%02d %s", startHour, startMinute, startPeriod))
-            updateSelectedTimeRange()
+            selectedTime = Pair(picker.hour, picker.minute)
+            val formattedTime = String.format(Locale.getDefault(), "%02d:%02d %s",
+                picker.hour, picker.minute, if (picker.hour < 12) "AM" else "PM")
+            startTimeEditText.setText(formattedTime)
+            updateSelectedDateTime()
         }
 
-        picker.addOnDismissListener {
-            val activity = requireActivity() as MapsActivity
-            activity.hideSystemUI()
+        picker.show(childFragmentManager, "TIME_PICKER")
+    }
+
+    private fun updateSelectedDateTime() {
+        if (selectedDate != null && selectedTime != null) {
+            val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(selectedDate!!))
+            val formattedTime = String.format(Locale.getDefault(), "%02d:%02d %s",
+                selectedTime!!.first, selectedTime!!.second, if (selectedTime!!.first < 12) "AM" else "PM")
+            val dateTimeString = "Fecha y hora seleccionadas: $formattedDate $formattedTime"
+            selectedDateTimeTextView.text = dateTimeString
         }
-
-        picker.show(childFragmentManager, "START_TIME_PICKER")
     }
 
-    private fun showEndTimePicker() {
-        val picker = MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_12H)
-            .setHour(startHour)
-            .setMinute(startMinute)
-            .setTitleText("Selecciona la hora de fin")
-            .build()
+    fun compruebaFechaYHora(): Boolean {
+        return (selectedDate != null && selectedTime != null)
+    }
 
-        picker.addOnPositiveButtonClickListener {
-            endHour = picker.hour
-            endMinute = picker.minute
-            val endPeriod = if (picker.hour < 12) "AM" else "PM"
-            endTimeEditText.setText(String.format(Locale.getDefault(), "%02d:%02d %s", endHour, endMinute, endPeriod))
-            updateSelectedTimeRange()
+    fun getFecha(): Timestamp {
+        val calendar = Calendar.getInstance().apply {
+            clear()
+            if (selectedDate != null) {
+                timeInMillis = selectedDate!!
+            }
+            if (selectedTime != null) {
+                val (hour, minute) = selectedTime!!
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, minute)
+            }
         }
-
-        picker.addOnDismissListener {
-            val activity = requireActivity() as MapsActivity
-            activity.hideSystemUI()
-        }
-
-        picker.show(childFragmentManager, "END_TIME_PICKER")
+        return Timestamp(calendar.time)
     }
 
-    private fun updateSelectedTimeRange() {
-        val startPeriod = if (startHour < 12) "AM" else "PM"
-        val endPeriod = if (endHour < 12) "AM" else "PM"
-        val startTime = String.format(Locale.getDefault(), "%02d:%02d %s", startHour, startMinute, startPeriod)
-        val endTime = String.format(Locale.getDefault(), "%02d:%02d %s", endHour, endMinute, endPeriod)
-        val timeRange = "Franja horaria seleccionada: $startTime - $endTime"
-        selectedTimeRangeTextView.text = timeRange
-    }
-
-    fun compruebaRango(): Boolean {
-        return (abs(endMinute-startMinute) >= 15)
-    }
 }

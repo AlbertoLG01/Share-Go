@@ -1,32 +1,23 @@
 package com.example.sharego.ui.publish
 
+import ResumenViajeFragment
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.example.sharego.MainActivity
 import com.example.sharego.R
+import com.example.sharego.dataClasses.Viaje
 import com.example.sharego.databinding.ActivityMapsBinding
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class MapsActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityMapsBinding
+    private lateinit var viaje: Viaje
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +26,8 @@ class MapsActivity : AppCompatActivity(){
         setContentView(binding.root)
         hideSystemUI()
         supportActionBar?.title = "¿Desde dónde sales?"
+
+        viaje = Viaje()
 
         // Configurar el SupportMapFragment dinámicamente
         val mapFragment = MapsFragment()
@@ -45,6 +38,12 @@ class MapsActivity : AppCompatActivity(){
 
         // Configurar el OnClickListener para el botón de volver atrás
         binding.fabBack.setOnClickListener {
+
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.contenedor_fragments)
+
+            if (currentFragment is ResumenViajeFragment)
+                binding.fabNext.isEnabled = true
+
             onBackPressed() // Esta función invoca el comportamiento predeterminado de "volver atrás"
         }
 
@@ -67,23 +66,57 @@ class MapsActivity : AppCompatActivity(){
 
             if (currentFragment is MapsFragment) {
                 // El fragmento actual es MapsFragment
+
+                viaje.origenGeo = currentFragment.getOrigen()
+                viaje.origen = currentFragment.getCiudadOrigen()!!
+
+                transaction.replace(R.id.contenedor_fragments, MapsFragment2())
+                transaction.addToBackStack(null)
+                transaction.commit()
+            } else if (currentFragment is MapsFragment2) {
+                // El fragmento actual es MapsFragment
+
+                viaje.destinoGeo = currentFragment.getDestino()
+                viaje.destino = currentFragment.getCiudadDestino()!!
+
                 transaction.replace(R.id.contenedor_fragments, TimeSelectorFragment())
                 transaction.addToBackStack(null)
                 transaction.commit()
+
             } else if (currentFragment is TimeSelectorFragment) {
                 // El fragmento actual es TimeSelectorFragment
                 //Comprobar que los minutos no distan menos de 15 (en valor abs)
-                if (currentFragment.compruebaRango()){
-                    transaction.replace(R.id.contenedor_fragments, MapsFragment2())
+                if (currentFragment.compruebaFechaYHora()){
+
+                    viaje.fecha = currentFragment.getFecha()
+
+                    transaction.replace(R.id.contenedor_fragments, CompletaDatosViajeFragment())
                     transaction.addToBackStack(null)
                     transaction.commit()
                 }
                 else{
-                    val snackbar = Snackbar.make(currentFragment.requireView(), "Selecciona un rango de horas como mínimo de 15 minutos", Snackbar.LENGTH_LONG)
+                    val snackbar = Snackbar.make(currentFragment.requireView(), "Selecciona una hora por favor", Snackbar.LENGTH_LONG)
                     snackbar.anchorView = binding.fabNext
                     snackbar.show()
                 }
-            } else {
+            } else if (currentFragment is CompletaDatosViajeFragment){
+                if(currentFragment.validateInputs()){
+
+                    viaje.plazas = currentFragment.getNumplazas()
+                    viaje.precioPlaza = currentFragment.getPrecioPlaza()
+                    viaje.descripcion = currentFragment.getDescripcion()
+
+                    val db = Firebase.firestore
+                    viaje.conductor = db.collection("Usuarios").document("pUvzJWWI7DfpvDO0TgqP")
+
+                    binding.fabNext.isEnabled = false
+
+                    transaction.replace(R.id.contenedor_fragments, ResumenViajeFragment())
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                }
+            }
+            else{
                 // El fragmento actual es otro fragmento
                 // Realiza aquí las acciones predeterminadas o manejo de error
             }
@@ -137,5 +170,9 @@ class MapsActivity : AppCompatActivity(){
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 )
+    }
+
+    fun getViaje() : Viaje{
+        return viaje
     }
 }

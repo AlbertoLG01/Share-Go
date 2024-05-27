@@ -9,34 +9,20 @@
 
 
     <TextView
-        android:id="@+id/selectedDateTime"
+        android:id="@+id/selectedTimeRange"
         android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hora de salida seleccionada: "
+        android:text="Franja horaria seleccionada: "
         android:padding="16dp"
         android:layout_gravity="center"/>
-
-    <EditText
-        android:id="@+id/startDateEditText"
-        android:layout_marginTop="50dp"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text="Selecciona Fecha de Salida"
-        android:textAlignment="center"
-        android:focusable="false"
-        android:padding="16dp"
-        android:background="@drawable/edittext_background"
-        android:inputType="none"
-        android:textColor="@color/white"
-        android:layout_gravity="center" />
 
     <EditText
         android:id="@+id/startTimeEditText"
         android:layout_marginTop="50dp"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Selecciona hora salida"
+        android:text="Selecciona hora inicio"
         android:textAlignment="center"
         android:focusable="false"
         android:padding="16dp"
@@ -44,5 +30,19 @@
         android:inputType="none"
         android:textColor="@color/white"
         android:layout_gravity="center" />
+
+    <EditText
+        android:id="@+id/endTimeEditText"
+        android:layout_marginTop="50dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Selecciona hora fin"
+        android:textAlignment="center"
+        android:focusable="false"
+        android:padding="16dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="none"
+        android:textColor="@color/white"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

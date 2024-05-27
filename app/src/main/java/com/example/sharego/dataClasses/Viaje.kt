@@ -13,5 +13,6 @@ data class Viaje(
     var pasajeros: List<DocumentReference> = emptyList(),
     var precioPlaza: Float = 0f,
     var origenGeo: GeoPoint? = null,
-    var destinoGeo: GeoPoint? = null
+    var destinoGeo: GeoPoint? = null,
+    var descripcion: String = ""
 )

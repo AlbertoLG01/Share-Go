@@ -20,6 +20,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.firestore.GeoPoint
+import android.location.Geocoder
+import java.util.Locale
 
 class MapsFragment : Fragment() {
 
@@ -45,14 +48,14 @@ class MapsFragment : Fragment() {
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 if (location != null) {
                     val currentLocation = LatLng(location.latitude, location.longitude)
-                    marker = googleMap.addMarker(MarkerOptions().position(currentLocation).title("Tu Ubicación"))
+                    marker = googleMap.addMarker(MarkerOptions().position(currentLocation).title("Tu Ubicación"))!!
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
                 }
             }
 
             googleMap.setOnMapClickListener { latLng ->
                 googleMap.clear()
-                marker = googleMap.addMarker(MarkerOptions().position(latLng).title("Ubicacion seleccionada"))
+                marker = googleMap.addMarker(MarkerOptions().position(latLng).title("Ubicacion seleccionada"))!!
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
             }
 
@@ -93,6 +96,26 @@ class MapsFragment : Fragment() {
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
+    }
+
+    fun getOrigen(): GeoPoint {
+        val markerPosition = marker?.position
+        if (markerPosition != null) {
+            return GeoPoint(markerPosition.latitude, markerPosition.longitude)
+        }
+        return GeoPoint(0.0, 0.0)
+    }
+
+    fun getCiudadOrigen(): String? {
+        val latLng = marker?.position
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        val addresses = latLng?.let { geocoder.getFromLocation(it.latitude, latLng.longitude, 1) }
+
+        return if (addresses!!.isNotEmpty()) {
+            addresses[0].locality // Devuelve el nombre de la ciudad
+        } else {
+            null // No se encontraron direcciones
+        }
     }
 }
 

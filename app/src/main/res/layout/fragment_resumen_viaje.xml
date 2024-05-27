@@ -1,0 +1,67 @@
+<!-- fragment_resumen_viaje.xml -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewConductor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Conductor:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewOrigen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Origen:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewDestino"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Destino:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewFecha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fecha:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewPlazas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Plazas disponibles:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewPrecioPlaza"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Precio por plaza:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripción:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Agrega más TextViews para otras propiedades del objeto Viaje si es necesario -->
+
+</LinearLayout>
