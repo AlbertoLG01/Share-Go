@@ -69,6 +69,8 @@ dependencies {
     implementation (libs.firebase.analytics.ktx)
     implementation (libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore)
+    implementation (libs.firebase.ui.auth)
+
     implementation(libs.androidx.animation.graphics.android)
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)

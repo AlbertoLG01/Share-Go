@@ -3,10 +3,12 @@ package com.example.sharego.ui.publish
 import ResumenViajeFragment
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sharego.MainActivity
 import com.example.sharego.R
+import com.example.sharego.UserManager
 import com.example.sharego.dataClasses.Viaje
 import com.example.sharego.databinding.ActivityMapsBinding
 import com.google.android.material.snackbar.Snackbar
@@ -107,7 +109,7 @@ class MapsActivity : AppCompatActivity(){
                     viaje.descripcion = currentFragment.getDescripcion()
 
                     val db = Firebase.firestore
-                    viaje.conductor = db.collection("Usuarios").document("pUvzJWWI7DfpvDO0TgqP")
+                    viaje.conductor = db.collection("Usuarios").document(UserManager.getUsuarioReferenceManager()?.id!!)
 
                     binding.fabNext.isEnabled = false
 
@@ -119,6 +121,7 @@ class MapsActivity : AppCompatActivity(){
             else{
                 // El fragmento actual es otro fragmento
                 // Realiza aquí las acciones predeterminadas o manejo de error
+                Log.e("MapsActivity", "Fallo en el manejo de fragmentos")
             }
         }
     }

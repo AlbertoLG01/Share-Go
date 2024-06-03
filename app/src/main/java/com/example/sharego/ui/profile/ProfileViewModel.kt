@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.sharego.UserManager
 import com.example.sharego.dataClasses.Usuario
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
@@ -18,7 +19,7 @@ class ProfileViewModel : ViewModel() {
 
     //Base de Datos
     val db = Firebase.firestore
-    val userID = "pUvzJWWI7DfpvDO0TgqP"  //ANA.... CAMBIAR POR USER ID CUANDO SE INICIE SESION
+    var userID = ""
 
     init {
         // Get the viajes from the database
@@ -26,6 +27,9 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun getUsuario() {
+
+        userID = UserManager.getUsuarioReferenceManager()?.id!!
+
         db.collection("Usuarios")
             .document(userID)
             .get()
