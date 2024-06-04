@@ -176,4 +176,8 @@ class SelectViajeFragment : Fragment() {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
     }
 
+    fun getSelectedViaje() : String{
+        return markerSeleccionado?.tag.toString()
+    }
+
 }

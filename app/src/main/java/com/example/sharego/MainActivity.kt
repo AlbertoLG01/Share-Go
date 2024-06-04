@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
                         if (document.exists()) {
                             val usuarioReference = document.reference
                             val usuario = document.toObject(Usuario::class.java)!!
-                            UserManager.initialize(usuario, usuarioReference)
+                            UserManager.setUsuario(usuario)
+                            UserManager.setUsuarioReference(usuarioReference)
                         } else {
                             // El usuario no existe en Firestore, así que lo creamos
                             val newUser = Usuario(
@@ -53,7 +54,8 @@ class MainActivity : AppCompatActivity() {
                             )
                             db.collection("Usuarios").document(userID).set(newUser)
                                 .addOnSuccessListener {
-                                    UserManager.initialize(newUser, db.collection("Usuarios").document(userID))
+                                    UserManager.setUsuario(newUser)
+                                    UserManager.setUsuarioReference(db.collection("Usuarios").document(userID))
                                 }
                                 .addOnFailureListener { e ->
                                     Log.e("FirestoreError", "Error al crear el usuario en Firestore", e)
@@ -73,9 +75,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         hideSystemUI()
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         val providers = arrayListOf(AuthUI.IdpConfig.EmailBuilder().build())
 
         val signInIntent = AuthUI.getInstance()
@@ -85,6 +84,9 @@ class MainActivity : AppCompatActivity() {
             .setTheme(R.style.Theme_ShareGo) // Set theme
             .build()
         signInLauncher.launch(signInIntent)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)

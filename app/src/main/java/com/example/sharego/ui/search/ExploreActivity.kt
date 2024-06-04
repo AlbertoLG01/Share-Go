@@ -41,7 +41,7 @@ class ExploreActivity : AppCompatActivity(){
 
             val currentFragment = supportFragmentManager.findFragmentById(R.id.contenedor_fragments)
 
-            if (currentFragment is ResumenViajeFragment)
+            if (currentFragment is ResumenViajeSearchFragment)
                 binding.fabNext.isEnabled = true
 
             onBackPressed() // Esta función invoca el comportamiento predeterminado de "volver atrás"
@@ -99,7 +99,17 @@ class ExploreActivity : AppCompatActivity(){
 
                 binding.fabNext.isEnabled = false
 
-                transaction.replace(R.id.contenedor_fragments, ResumenViajeSearchFragment())
+                val viajeId = currentFragment.getSelectedViaje()
+
+                val bundle = Bundle().apply {
+                    putString("viajeId", viajeId)
+                }
+
+                val resumenViajeSearchFragment = ResumenViajeSearchFragment().apply {
+                    arguments = bundle
+                }
+
+                transaction.replace(R.id.contenedor_fragments, resumenViajeSearchFragment)
                 transaction.addToBackStack(null)
                 transaction.commit()
 

@@ -1,22 +1,27 @@
 package com.example.sharego
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.sharego.dataClasses.Usuario
 import com.google.firebase.firestore.DocumentReference
 
 object UserManager {
-    var usuario: Usuario? = null
-    var usuarioReference: DocumentReference? = null
+    private val _usuario = MutableLiveData<Usuario?>()
+    val usuario: LiveData<Usuario?> get() = _usuario
 
-    fun initialize(usuario: Usuario, usuarioReference: DocumentReference) {
-        this.usuario = usuario
-        this.usuarioReference = usuarioReference
+    private val _usuarioReference = MutableLiveData<DocumentReference?>()
+    val usuarioReference: LiveData<DocumentReference?> get() = _usuarioReference
+
+    fun setUsuario(usuario: Usuario) {
+        _usuario.value = usuario
     }
 
-    fun getUsuarioManager(): Usuario? {
-        return usuario
+    fun setUsuarioReference(reference: DocumentReference) {
+        _usuarioReference.value = reference
     }
 
     fun getUsuarioReferenceManager(): DocumentReference? {
-        return usuarioReference
+        return _usuarioReference.value
     }
 }
+

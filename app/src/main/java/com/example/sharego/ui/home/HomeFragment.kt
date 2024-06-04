@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sharego.R
+import com.example.sharego.UserManager
 import com.example.sharego.dataClasses.Viaje
 import com.example.sharego.databinding.FragmentHomeBinding
 import java.util.Locale

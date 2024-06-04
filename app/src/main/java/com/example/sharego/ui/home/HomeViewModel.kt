@@ -3,7 +3,9 @@ package com.example.sharego.ui.home
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.example.sharego.UserManager
 import com.example.sharego.dataClasses.Viaje
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -19,18 +21,20 @@ class HomeViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
-    //Base de Datos
+    // Base de Datos
     val db = Firebase.firestore
-    val userID = "pUvzJWWI7DfpvDO0TgqP"  //ANA.... CAMBIAR POR USER ID CUANDO SE INICIE SESION
 
     init {
-        //Obtener el nombre del usuario y sus viajes de la base de datos
-        getNombreUsuario()
-        getViajes()
+        // Observar los cambios en el usuario
+        UserManager.usuarioReference.observeForever { usuarioReference ->
+            if (usuarioReference != null) {
+                getViajes(usuarioReference.id)
+                getNombreUsuario(usuarioReference.id)
+            }
+        }
     }
 
-    private fun getViajes() {
-
+    private fun getViajes(userID: String) {
         db.collection("Viajes")
             .whereArrayContains("pasajeros", db.document("Usuarios/$userID"))
             .get()
@@ -39,19 +43,17 @@ class HomeViewModel : ViewModel() {
                 Log.i("viajeList", "viajeList: $viajeList")
                 _viajes.value = viajeList
             }
-
     }
 
-    private fun getNombreUsuario(){
+    private fun getNombreUsuario(userID: String) {
         db.collection("Usuarios").document(userID).get().addOnSuccessListener {
-            val nombre = it.get("nombre")
-            val sexo = it.get("sexo")
-            if(sexo == "Hombre")
-                _text.value = "Bienvenido $nombre ! \n" + _text.value
-            else if (sexo == "Mujer")
-                _text.value = "Bienvenida $nombre ! \n" + _text.value
-            else
-                _text.value = "Bienvenid@ $nombre ! \n" + _text.value
+            val nombre = it.getString("nombre")
+            val sexo = it.getString("sexo")
+            _text.value = when (sexo) {
+                "Hombre" -> "Bienvenido $nombre ! \n${_text.value}"
+                "Mujer" -> "Bienvenida $nombre ! \n${_text.value}"
+                else -> "Bienvenid@ $nombre ! \n${_text.value}"
+            }
         }
     }
 }
