@@ -13,6 +13,7 @@ import com.example.sharego.dataClasses.Usuario
 import com.example.sharego.dataClasses.Viaje
 import com.example.sharego.ui.publish.MapsActivity
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
@@ -24,6 +25,7 @@ import java.util.Locale
 class ResumenViajeSearchFragment : Fragment() {
 
     private lateinit var viaje: Viaje
+    private lateinit var conductorRef: DocumentReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,11 +47,11 @@ class ResumenViajeSearchFragment : Fragment() {
                     Log.i("ResumenViaje", "Viaje: $viaje")
 
 
-                    val conductorRef = viaje.conductor
+                    conductorRef = viaje.conductor!!
 
                     // Consulta el documento del conductor para obtener su nombre
-                    conductorRef?.get()
-                        ?.addOnSuccessListener { documentSnapshot ->
+                    conductorRef.get()
+                        .addOnSuccessListener { documentSnapshot ->
                             if (documentSnapshot.exists()) {
                                 // El documento del conductor existe, obtén su nombre
                                 val conductorNombre = documentSnapshot.getString("nombre")
@@ -91,6 +93,12 @@ class ResumenViajeSearchFragment : Fragment() {
 
                     val botonResumen = view?.findViewById<Button>(R.id.btnCrearViaje)
                     botonResumen?.text = "RESERVAR VIAJE"
+                    if(conductorRef == UserManager.getUsuarioReferenceManager()){
+                        botonResumen?.isEnabled = false
+                        val snackbar = Snackbar.make(requireView(), "No puedes reservar un viaje en el que tu eres el conductor", Snackbar.ANIMATION_MODE_SLIDE)
+                        snackbar.anchorView = requireActivity().findViewById(R.id.fabNext)
+                        snackbar.show()
+                    }
                     botonResumen?.setOnClickListener {
 
                         if(viaje.pasajeros.size == viaje.plazas){

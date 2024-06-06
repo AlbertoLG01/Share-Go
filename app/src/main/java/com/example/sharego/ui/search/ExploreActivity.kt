@@ -5,10 +5,13 @@ import ResumenViajeSearchFragment
 import SelectViajeFragment
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sharego.MainActivity
 import com.example.sharego.R
+import com.example.sharego.UserManager
 import com.example.sharego.dataClasses.Viaje
 import com.example.sharego.databinding.ActivityMapsBinding
 import com.example.sharego.ui.search.TimeRangeSelectorFragment
@@ -117,6 +120,7 @@ class ExploreActivity : AppCompatActivity(){
             else{
                 // El fragmento actual es otro fragmento
                 // Realiza aquí las acciones predeterminadas o manejo de error
+                Log.e("ErrorBusqueda", "Fragmento no esperado")
             }
         }
     }
