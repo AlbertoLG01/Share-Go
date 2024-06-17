@@ -74,7 +74,7 @@ dependencies {
     implementation(libs.androidx.animation.graphics.android)
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
-    implementation ("com.google.android.libraries.places:places:2.5.0")
+    implementation ("com.google.android.libraries.places:places:2.7.0")
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -18,4 +18,6 @@
     <string name="guardar">Guardar</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_activity_explore">ExploreActivity</string>
+
+    <string name="google_maps_key">AIzaSyA18R5Vj0GbooWGFdjFrjtxJLKdbyFA9J8</string>
 </resources>

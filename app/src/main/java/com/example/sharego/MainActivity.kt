@@ -13,6 +13,7 @@ import com.example.sharego.databinding.ActivityMainBinding
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.android.libraries.places.api.Places
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -84,6 +85,11 @@ class MainActivity : AppCompatActivity() {
             .setTheme(R.style.Theme_ShareGo) // Set theme
             .build()
         signInLauncher.launch(signInIntent)
+
+        // Initialize the Places SDK
+        if (!Places.isInitialized()) {
+            Places.initialize(this, getString(R.string.google_maps_key))
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
